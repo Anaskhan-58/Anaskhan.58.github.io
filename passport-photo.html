@@ -1,0 +1,480 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Passport Photo Maker - FreeDocTools</title>
+
+<meta name="description"
+content="Create passport size photos online for free.">
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f7fb;
+    color: #222;
+}
+
+header {
+    background: white;
+    padding: 18px 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.header {
+    max-width: 900px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+header a {
+    text-decoration: none;
+    color: #333;
+}
+
+.container {
+    max-width: 750px;
+    margin: 50px auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.box {
+    background: white;
+    border: 2px dashed #bbb;
+    border-radius: 15px;
+    padding: 35px 20px;
+    text-align: center;
+}
+
+input[type="file"] {
+    margin: 20px 0;
+    width: 100%;
+}
+
+select {
+    width: 100%;
+    max-width: 350px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    margin: 10px 0 20px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+button {
+    border: none;
+    background: #222;
+    color: white;
+    padding: 13px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+button:hover {
+    opacity: 0.85;
+}
+
+#preview {
+    display: none;
+    max-width: 250px;
+    max-height: 320px;
+    margin: 25px auto;
+    border: 1px solid #ddd;
+}
+
+#download {
+    display: none;
+    margin-top: 15px;
+    background: #222;
+    color: white;
+    text-decoration: none;
+    padding: 13px 25px;
+    border-radius: 8px;
+}
+
+#status {
+    margin-top: 20px;
+    color: #555;
+}
+
+.info {
+    text-align: center;
+    color: #777;
+    font-size: 14px;
+    margin-top: 25px;
+    line-height: 1.6;
+}
+
+footer {
+    text-align: center;
+    padding: 30px;
+    color: #777;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<div class="header">
+
+<div class="logo">
+FreeDocTools
+</div>
+
+<a href="index.html">
+← Home
+</a>
+
+</div>
+
+</header>
+
+
+<div class="container">
+
+<h1>Passport Photo Maker</h1>
+
+<p class="subtitle">
+Create a passport-size photo online for free.
+</p>
+
+
+<div class="box">
+
+<h3>Select Your Photo</h3>
+
+<input
+type="file"
+id="imageInput"
+accept="image/jpeg,image/png,image/webp"
+>
+
+
+<label for="photoSize">
+Select Photo Size
+</label>
+
+<select id="photoSize">
+
+<option value="35x45">
+35 × 45 mm
+</option>
+
+<option value="2x2">
+2 × 2 inch
+</option>
+
+<option value="35x35">
+35 × 35 mm
+</option>
+
+</select>
+
+
+<br>
+
+
+<button onclick="createPhoto()">
+Create Passport Photo
+</button>
+
+
+<p id="status"></p>
+
+
+<img
+id="preview"
+alt="Passport Photo Preview"
+>
+
+
+<br>
+
+
+<a
+id="download"
+download="FreeDocTools-Passport-Photo.jpg">
+Download Photo
+</a>
+
+</div>
+
+
+<p class="info">
+
+Your photo is processed directly in your browser.
+It is not uploaded to our server.
+
+</p>
+
+</div>
+
+
+<footer>
+
+© 2026 FreeDocTools
+
+</footer>
+
+
+<script>
+
+function createPhoto() {
+
+    const input =
+    document.getElementById("imageInput");
+
+    const file =
+    input.files[0];
+
+
+    if (!file) {
+
+        alert("Please select a photo.");
+
+        return;
+
+    }
+
+
+    const size =
+    document.getElementById("photoSize").value;
+
+
+    let targetWidth;
+    let targetHeight;
+
+
+    /*
+    Create a high-resolution
+    output for printing.
+    */
+
+
+    if (size === "35x45") {
+
+        targetWidth = 413;
+        targetHeight = 531;
+
+    }
+
+
+    if (size === "2x2") {
+
+        targetWidth = 600;
+        targetHeight = 600;
+
+    }
+
+
+    if (size === "35x35") {
+
+        targetWidth = 413;
+        targetHeight = 413;
+
+    }
+
+
+    const reader =
+    new FileReader();
+
+
+    reader.onload =
+    function(e) {
+
+        const img =
+        new Image();
+
+
+        img.onload =
+        function() {
+
+            /*
+            Calculate crop area
+            using the selected ratio.
+            */
+
+            const targetRatio =
+            targetWidth / targetHeight;
+
+
+            const imageRatio =
+            img.width / img.height;
+
+
+            let cropWidth =
+            img.width;
+
+            let cropHeight =
+            img.height;
+
+            let cropX = 0;
+
+            let cropY = 0;
+
+
+            if (imageRatio > targetRatio) {
+
+                cropWidth =
+                img.height * targetRatio;
+
+                cropX =
+                (img.width - cropWidth) / 2;
+
+            } else {
+
+                cropHeight =
+                img.width / targetRatio;
+
+                cropY =
+                (img.height - cropHeight) / 2;
+
+            }
+
+
+            const canvas =
+            document.createElement("canvas");
+
+
+            canvas.width =
+            targetWidth;
+
+            canvas.height =
+            targetHeight;
+
+
+            const ctx =
+            canvas.getContext("2d");
+
+
+            /*
+            White background
+            */
+
+            ctx.fillStyle = "white";
+
+            ctx.fillRect(
+                0,
+                0,
+                targetWidth,
+                targetHeight
+            );
+
+
+            /*
+            Draw cropped photo
+            */
+
+            ctx.drawImage(
+                img,
+                cropX,
+                cropY,
+                cropWidth,
+                cropHeight,
+                0,
+                0,
+                targetWidth,
+                targetHeight
+            );
+
+
+            const output =
+            canvas.toDataURL(
+                "image/jpeg",
+                0.95
+            );
+
+
+            const preview =
+            document.getElementById("preview");
+
+
+            preview.src =
+            output;
+
+
+            preview.style.display =
+            "block";
+
+
+            const download =
+            document.getElementById("download");
+
+
+            download.href =
+            output;
+
+
+            download.style.display =
+            "inline-block";
+
+
+            document
+            .getElementById("status")
+            .innerText =
+            "Passport photo created successfully!";
+
+        };
+
+
+        img.src =
+        e.target.result;
+
+    };
+
+
+    reader.readAsDataURL(file);
+
+}
+
+</script>
+
+
+</body>
+
+</html>
+```
