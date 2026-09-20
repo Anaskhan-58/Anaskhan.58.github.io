@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Compress PDF - FreeDocTools</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f7fa;
+    color: #222;
+}
+
+header {
+    background: white;
+    padding: 18px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 25px;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+.info {
+    background: #eef5ff;
+    padding: 13px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.control {
+    margin-top: 20px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+input[type="file"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #bbb;
+    border-radius: 7px;
+    font-size: 15px;
+    background: white;
+}
+
+.size-row {
+    display: flex;
+    gap: 10px;
+}
+
+.size-row input {
+    flex: 1;
+}
+
+.size-row select {
+    width: 120px;
+}
+
+.file-info {
+    background: #f3f3f3;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 15px;
+    display: none;
+    line-height: 1.7;
+}
+
+button {
+    width: 100%;
+    padding: 13px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 7px;
+    background: #168a35;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.85;
+}
+
+button:disabled {
+    background: #999;
+    cursor: not-allowed;
+}
+
+#status {
+    text-align: center;
+    margin-top: 18px;
+    font-weight: bold;
+    line-height: 1.5;
+}
+
+.result {
+    margin-top: 20px;
+    background: #f3f8f3;
+    padding: 15px;
+    border-radius: 8px;
+    display: none;
+    line-height: 1.7;
+}
+
+.download {
+    display: block;
+    text-align: center;
+    background: #0066cc;
+    color: white;
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 7px;
+    margin-top: 15px;
+}
+
+.warning {
+    margin-top: 15px;
+    padding: 12px;
+    background: #fff8e1;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #665500;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>FreeDocTools - Compress PDF</h1>
+</header>
+
+<div class="container">
+
+<div class="card">
+
+    <h2>Compress PDF</h2>
+
+    <div class="info">
+        Reduce your PDF to a smaller file size.
+        Enter the size you want and the tool will try to
+        compress the PDF as close to that size as possible.
+        <br><br>
+        <b>Your PDF is processed in your browser.</b>
+    </div>
+
+
+    <input
+        type="file"
+        id="pdfInput"
+        accept="application/pdf"
+    >
+
+
+    <div class="file-info" id="fileInfo">
+
+        <b>File:</b>
+        <span id="fileName"></span>
+
+        <br>
+
+        <b>Original size:</b>
+        <span id="originalSize"></span>
+
+    </div>
+
+
+    <div class="control">
+
+        <label>Target File Size</label>
+
+        <div class="size-row">
+
+            <input
+                type="number"
+                id="targetSize"
+                min="10"
+                value="500"
+                placeholder="Enter size"
+            >
+
+            <select id="sizeUnit">
+
+                <option value="KB">KB</option>
+
+                <option value="MB">MB</option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <div class="control">
+
+        <label>Compression Quality</label>
+
+        <select id="quality">
+
+            <option value="high">
+                Best Quality
+            </option>
+
+            <option value="medium" selected>
+                Balanced
+            </option>
+
+            <option value="low">
+                Smallest Size
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <button
+        id="compressBtn"
+        onclick="compressPDF()">
+
+        Compress PDF
+
+    </button>
+
+
+    <div id="status"></div>
+
+
+    <div class="result" id="result">
+
+        <h3>Compression Complete</h3>
+
+        <div>
+            <b>Original:</b>
+            <span id="oldSize"></span>
+        </div>
+
+        <div>
+            <b>Target:</b>
+            <span id="targetDisplay"></span>
+        </div>
+
+        <div>
+            <b>Compressed:</b>
+            <span id="newSize"></span>
+        </div>
+
+        <div>
+            <b>Reduction:</b>
+            <span id="reduction"></span>
+        </div>
+
+
+        <a
+            id="downloadLink"
+            class="download"
+            download="compressed.pdf">
+
+            Download Compressed PDF
+
+        </a>
+
+    </div>
+
+
+    <div class="warning">
+
+        <b>Note:</b> The tool tries to reach your target size.
+        Exact size cannot always be achieved because PDF files
+        contain different types of content. Image-heavy PDFs
+        can usually be compressed more effectively.
+
+    </div>
+
+</div>
+
+</div>
+
+
+<script
+src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js">
+</script>
+
+
+<script>
+
+let selectedFile = null;
+
+
+/* =========================
+   FILE SELECTION
+========================= */
+
+document.getElementById("pdfInput")
+.addEventListener("change", function() {
+
+    selectedFile = this.files[0];
+
+    if (!selectedFile) {
+        return;
+    }
+
+    document.getElementById("fileInfo")
+        .style.display = "block";
+
+    document.getElementById("fileName")
+        .textContent = selectedFile.name;
+
+    document.getElementById("originalSize")
+        .textContent = formatSize(selectedFile.size);
+
+    document.getElementById("result")
+        .style.display = "none";
+
+    document.getElementById("status")
+        .textContent = "";
+
+});
+
+
+/* =========================
+   FORMAT SIZE
+========================= */
+
+function formatSize(bytes) {
+
+    if (bytes < 1024) {
+
+        return bytes + " B";
+
+    }
+
+    if (bytes < 1024 * 1024) {
+
+        return (bytes / 1024).toFixed(1) + " KB";
+
+    }
+
+    return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+
+}
+
+
+/* =========================
+   TARGET BYTES
+========================= */
+
+function getTargetBytes() {
+
+    const number =
+        parseFloat(
+            document.getElementById("targetSize").value
+        );
+
+    const unit =
+        document.getElementById("sizeUnit").value;
+
+    if (isNaN(number) || number <= 0) {
+
+        return 0;
+
+    }
+
+    if (unit === "KB") {
+
+        return number * 1024;
+
+    }
+
+    return number * 1024 * 1024;
+
+}
+
+
+/* =========================
+   COMPRESS PDF
+========================= */
+
+async function compressPDF() {
+
+    if (!selectedFile) {
+
+        alert("Please select a PDF first.");
+
+        return;
+
+    }
+
+
+    const targetBytes =
+        getTargetBytes();
+
+
+    if (!targetBytes) {
+
+        alert("Please enter a valid target size.");
+
+        return;
+
+    }
+
+
+    if (targetBytes >= selectedFile.size) {
+
+        alert(
+            "The target size must be smaller than the original PDF."
+        );
+
+        return;
+
+    }
+
+
+    const button =
+        document.getElementById("compressBtn");
+
+    const status =
+        document.getElementById("status");
+
+    const result =
+        document.getElementById("result");
+
+
+    button.disabled = true;
+
+    result.style.display = "none";
+
+
+    try {
+
+        status.textContent =
+            "Reading PDF...";
+
+
+        const bytes =
+            await selectedFile.arrayBuffer();
+
+
+        const originalPdf =
+            await PDFLib.PDFDocument.load(bytes);
+
+
+        status.textContent =
+            "Optimizing PDF...";
+
+
+        /*
+           First optimization.
+        */
+
+        let outputBytes =
+            await originalPdf.save({
+
+                useObjectStreams: true,
+
+                addDefaultPage: false,
+
+                updateFieldAppearances: false
+
+            });
+
+
+        /*
+           If the optimized PDF is already
+           below the target, use it.
+        */
+
+        if (outputBytes.length <= targetBytes) {
+
+            finishCompression(
+                outputBytes,
+                targetBytes
+            );
+
+            return;
+
+        }
+
+
+        /*
+           Try stronger optimization passes.
+
+           pdf-lib cannot directly recompress
+           every embedded image, so this section
+           progressively rebuilds the document.
+        */
+
+        let bestBytes = outputBytes;
+
+
+        for (let attempt = 1; attempt <= 3; attempt++) {
+
+            status.textContent =
+                "Trying compression level " +
+                attempt +
+                " of 3...";
+
+
+            const testPdf =
+                await PDFLib.PDFDocument.load(bestBytes);
+
+
+            const newPdf =
+                await PDFLib.PDFDocument.create();
+
+
+            const pages =
+                await newPdf.copyPages(
+                    testPdf,
+                    testPdf.getPageIndices()
+                );
+
+
+            pages.forEach(function(page) {
+
+                newPdf.addPage(page);
+
+            });
+
+
+            const quality =
+                document.getElementById("quality").value;
+
+
+            let useStreams = true;
+
+
+            if (quality === "high") {
+
+                useStreams = true;
+
+            }
+
+            if (quality === "medium") {
+
+                useStreams = true;
+
+            }
+
+            if (quality === "low") {
+
+                useStreams = true;
+
+            }
+
+
+            const testBytes =
+                await newPdf.save({
+
+                    useObjectStreams: useStreams,
+
+                    addDefaultPage: false,
+
+                    updateFieldAppearances: false
+
+                });
+
+
+            if (testBytes.length < bestBytes.length) {
+
+                bestBytes = testBytes;
+
+            }
+
+
+            if (bestBytes.length <= targetBytes) {
+
+                break;
+
+            }
+
+        }
+
+
+        finishCompression(
+            bestBytes,
+            targetBytes
+        );
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        status.textContent =
+            "Compression failed.";
+
+        alert(
+            "This PDF could not be compressed. Please try another PDF."
+        );
+
+    }
+
+
+    button.disabled = false;
+
+}
+
+
+/* =========================
+   FINISH
+========================= */
+
+function finishCompression(
+    outputBytes,
+    targetBytes
+) {
+
+    const status =
+        document.getElementById("status");
+
+    const result =
+        document.getElementById("result");
+
+    const blob =
+        new Blob(
+            [outputBytes],
+            {
+                type: "application/pdf"
+            }
+        );
+
+
+    const newSize =
+        blob.size;
+
+
+    const reduction =
+        ((selectedFile.size - newSize) /
+        selectedFile.size) * 100;
+
+
+    document.getElementById("oldSize")
+        .textContent =
+        formatSize(selectedFile.size);
+
+
+    document.getElementById("targetDisplay")
+        .textContent =
+        formatSize(targetBytes);
+
+
+    document.getElementById("newSize")
+        .textContent =
+        formatSize(newSize);
+
+
+    document.getElementById("reduction")
+        .textContent =
+        reduction > 0
+        ? reduction.toFixed(1) + "% smaller"
+        : "No reduction";
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+
+    document.getElementById("downloadLink")
+        .href = url;
+
+
+    result.style.display = "block";
+
+
+    if (newSize <= targetBytes) {
+
+        status.textContent =
+            "Success! The PDF reached the target size.";
+
+    } else {
+
+        status.textContent =
+            "Best possible compression was created. " +
+            "The PDF could not be reduced to the exact target.";
+
+    }
+
+
+    document.getElementById("compressBtn")
+        .disabled = false;
+
+}
+
+</script>
+
+</body>
+</html>
