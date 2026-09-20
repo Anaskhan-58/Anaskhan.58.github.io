@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Image Compressor - FreeDocTools</title>
+
+<meta name="description"
+content="Compress images online for free. Reduce image file size directly in your browser.">
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f7fb;
+    color: #222;
+}
+
+header {
+    background: white;
+    padding: 18px 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.header {
+    max-width: 900px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+header a {
+    text-decoration: none;
+    color: #333;
+}
+
+.container {
+    max-width: 750px;
+    margin: 50px auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.box {
+    background: white;
+    border: 2px dashed #bbb;
+    border-radius: 15px;
+    padding: 35px 20px;
+    text-align: center;
+}
+
+input[type="file"] {
+    margin: 20px 0;
+    width: 100%;
+}
+
+label {
+    display: block;
+    margin: 20px 0 8px;
+    font-weight: bold;
+}
+
+input[type="range"] {
+    width: 100%;
+}
+
+button {
+    border: none;
+    background: #222;
+    color: white;
+    padding: 13px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+button:hover {
+    opacity: 0.85;
+}
+
+#result {
+    display: none;
+    background: white;
+    margin-top: 25px;
+    padding: 25px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.preview {
+    max-width: 100%;
+    max-height: 300px;
+    margin: 20px auto;
+    display: block;
+}
+
+.download {
+    display: inline-block;
+    background: #222;
+    color: white;
+    text-decoration: none;
+    padding: 13px 25px;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+.info {
+    text-align: center;
+    color: #777;
+    font-size: 14px;
+    margin-top: 25px;
+    line-height: 1.6;
+}
+
+footer {
+    text-align: center;
+    padding: 30px;
+    color: #777;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="header">
+        <div class="logo">FreeDocTools</div>
+        <a href="index.html">← Home</a>
+    </div>
+</header>
+
+<div class="container">
+
+    <h1>Image Compressor</h1>
+
+    <p class="subtitle">
+        Compress your image and reduce its file size for free.
+    </p>
+
+    <div class="box">
+
+        <h3>Select an Image</h3>
+
+        <input
+            type="file"
+            id="imageInput"
+            accept="image/jpeg,image/png,image/webp"
+        >
+
+        <label for="quality">
+            Compression Quality:
+            <span id="qualityValue">70%</span>
+        </label>
+
+        <input
+            type="range"
+            id="quality"
+            min="10"
+            max="100"
+            value="70"
+        >
+
+        <br>
+
+        <button onclick="compressImage()">
+            Compress Image
+        </button>
+
+    </div>
+
+    <div id="result">
+
+        <h2>Compressed Image</h2>
+
+        <img id="preview" class="preview">
+
+        <p id="fileInfo"></p>
+
+        <a id="download" class="download" download="compressed-image.jpg">
+            Download Image
+        </a>
+
+    </div>
+
+    <p class="info">
+        Your image is processed directly in your browser.
+        It is not uploaded to our server.
+    </p>
+
+</div>
+
+<footer>
+    © 2026 FreeDocTools
+</footer>
+
+<script>
+
+const qualitySlider = document.getElementById("quality");
+const qualityValue = document.getElementById("qualityValue");
+
+qualitySlider.addEventListener("input", function() {
+    qualityValue.textContent = this.value + "%";
+});
+
+function compressImage() {
+
+    const input = document.getElementById("imageInput");
+
+    if (!input.files || !input.files[0]) {
+        alert("Please select an image first.");
+        return;
+    }
+
+    const file = input.files[0];
+
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+
+        const img = new Image();
+
+        img.onload = function() {
+
+            const canvas = document.createElement("canvas");
+
+            canvas.width = img.width;
+            canvas.height = img.height;
+
+            const ctx = canvas.getContext("2d");
+
+            ctx.drawImage(
+                img,
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+            const quality =
+                parseInt(qualitySlider.value) / 100;
+
+            canvas.toBlob(function(blob) {
+
+                const url = URL.createObjectURL(blob);
+
+                document.getElementById("preview").src = url;
+
+                const originalSize =
+                    (file.size / 1024).toFixed(1);
+
+                const compressedSize =
+                    (blob.size / 1024).toFixed(1);
+
+                document.getElementById("fileInfo").innerHTML =
+                    "Original size: " + originalSize + " KB<br>" +
+                    "Compressed size: " + compressedSize + " KB";
+
+                const download =
+                    document.getElementById("download");
+
+                download.href = url;
+
+                document.getElementById("result").style.display = "block";
+
+            }, "image/jpeg", quality);
+
+        };
+
+        img.src = event.target.result;
+
+    };
+
+    reader.readAsDataURL(file);
+}
+
+</script>
+
+</body>
+</html>
