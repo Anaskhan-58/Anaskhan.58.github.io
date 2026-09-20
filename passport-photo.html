@@ -1,21 +1,11 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Passport Photo Maker - FreeDocTools</title>
 
-<meta name="description"
-content="Create and customize passport size photos online for free.">
-
 <style>
-
 * {
     box-sizing: border-box;
 }
@@ -23,158 +13,160 @@ content="Create and customize passport size photos online for free.">
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: #f5f7fb;
+    background: #f5f7fa;
     color: #222;
 }
 
 header {
-    background: white;
-    padding: 18px 20px;
+    background: #ffffff;
+    padding: 18px;
+    text-align: center;
     border-bottom: 1px solid #ddd;
 }
 
-.header {
-    max-width: 950px;
-    margin: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo {
-    font-size: 22px;
-    font-weight: bold;
-}
-
-header a {
-    text-decoration: none;
-    color: #333;
+header h1 {
+    margin: 0;
+    font-size: 25px;
 }
 
 .container {
     max-width: 850px;
-    margin: 40px auto;
+    margin: auto;
     padding: 20px;
 }
 
-h1 {
-    text-align: center;
-    margin-bottom: 10px;
-}
-
-.subtitle {
-    text-align: center;
-    color: #666;
-    margin-bottom: 30px;
-}
-
-.box {
+.card {
     background: white;
-    border-radius: 15px;
-    padding: 30px 20px;
-    border: 1px solid #ddd;
-}
-
-.upload {
-    text-align: center;
-    padding-bottom: 25px;
-    border-bottom: 1px solid #eee;
-}
-
-input[type="file"] {
-    margin: 15px 0;
-    width: 100%;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
 }
 
 label {
     display: block;
     font-weight: bold;
-    margin-top: 15px;
     margin-bottom: 7px;
 }
 
-select {
+input[type="file"],
+select,
+input[type="number"] {
     width: 100%;
-    max-width: 350px;
     padding: 11px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 16px;
+    border: 1px solid #bbb;
+    border-radius: 7px;
+    font-size: 15px;
 }
 
-.editor {
-    display: none;
-    margin-top: 25px;
+.control {
+    margin-bottom: 18px;
 }
 
-.editor-title {
+button {
+    border: none;
+    padding: 11px 15px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 15px;
+    margin: 4px;
+    background: #222;
+    color: white;
+}
+
+button:hover {
+    opacity: 0.85;
+}
+
+.mode-buttons {
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
-.crop-area {
-    width: 300px;
-    height: 385px;
-    margin: 20px auto;
+.mode-buttons button.active {
+    background: #0066cc;
+}
+
+.workspace-wrapper {
+    text-align: center;
+}
+
+#workspace {
     position: relative;
+    width: 360px;
+    height: 400px;
+    max-width: 100%;
+    margin: 15px auto;
     overflow: hidden;
     background: #ddd;
-    border: 3px solid #222;
+    border: 2px solid #222;
     touch-action: none;
+    user-select: none;
 }
 
 #photo {
     position: absolute;
     max-width: none;
-    max-height: none;
     user-select: none;
     -webkit-user-drag: none;
-    cursor: move;
-}
-
-.crop-frame {
-    position: absolute;
-    inset: 0;
-    border: 2px solid white;
     pointer-events: none;
-    box-shadow:
-        0 0 0 9999px rgba(0,0,0,0.25);
 }
 
-.controls {
-    max-width: 400px;
-    margin: 20px auto;
+#cropBox {
+    position: absolute;
+    border: 3px solid white;
+    box-shadow: 0 0 0 9999px rgba(0,0,0,0.38);
+    cursor: move;
+    touch-action: none;
 }
 
-.control-row {
-    margin: 18px 0;
+.handle {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background: white;
+    border: 2px solid #222;
+    border-radius: 5px;
+    right: -12px;
+    bottom: -12px;
+    cursor: nwse-resize;
+    touch-action: none;
 }
 
-input[type="range"] {
-    width: 100%;
-}
-
-.zoom-value {
-    text-align: center;
-    color: #666;
+.instruction {
+    background: #eef5ff;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 15px;
     font-size: 14px;
-    margin-top: 5px;
+    line-height: 1.5;
+}
+
+.zoom-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.zoom-row input[type="range"] {
+    flex: 1;
+}
+
+.zoom-number {
+    width: 90px !important;
 }
 
 .background-options {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 12px;
+    gap: 8px;
 }
 
-.bg-button {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    border: 2px solid #aaa;
-    cursor: pointer;
+.bg-btn {
+    width: 55px;
+    height: 38px;
+    border: 2px solid #555;
+    padding: 0;
 }
 
 .bg-white {
@@ -186,972 +178,866 @@ input[type="range"] {
 }
 
 .bg-blue {
-    background: #8ec5e8;
+    background: #87ceeb;
 }
 
-.bg-lightgrey {
+.bg-grey {
     background: #eeeeee;
 }
 
-.bg-custom {
-    padding: 0;
-    overflow: hidden;
-}
-
-.bg-custom input {
-    width: 100%;
-    height: 100%;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-}
-
-.selected {
-    border: 3px solid #222;
-}
-
-button {
-    border: none;
-    background: #222;
-    color: white;
-    padding: 13px 24px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-button:hover {
-    opacity: 0.85;
-}
-
-.create-button {
-    display: block;
-    margin: 25px auto 10px;
+.bg-lightgreen {
+    background: #e4f5e4;
 }
 
 #result {
-    display: none;
     text-align: center;
-    margin-top: 30px;
-    padding-top: 25px;
-    border-top: 1px solid #eee;
 }
 
 #resultCanvas {
-    max-width: 250px;
-    max-height: 320px;
-    border: 1px solid #ddd;
+    max-width: 100%;
+    border: 1px solid #aaa;
 }
 
-#download {
+.download-btn {
     display: inline-block;
-    margin-top: 20px;
-    background: #222;
+    background: #168a35;
     color: white;
     text-decoration: none;
-    padding: 13px 25px;
-    border-radius: 8px;
+    padding: 12px 18px;
+    border-radius: 7px;
+    margin-top: 12px;
 }
 
-.status {
-    text-align: center;
+.hidden {
+    display: none;
+}
+
+.small-text {
+    font-size: 13px;
     color: #666;
-    margin-top: 15px;
+    margin-top: 5px;
 }
-
-.info {
-    text-align: center;
-    color: #777;
-    font-size: 14px;
-    margin-top: 25px;
-    line-height: 1.6;
-}
-
-footer {
-    text-align: center;
-    padding: 30px;
-    color: #777;
-}
-
-@media (max-width: 500px) {
-
-    .crop-area {
-        width: 250px;
-        height: 321px;
-    }
-
-}
-
 </style>
-
 </head>
-
 
 <body>
 
-
 <header>
-
-<div class="header">
-
-<div class="logo">
-FreeDocTools
-</div>
-
-<a href="index.html">
-← Home
-</a>
-
-</div>
-
+    <h1>FreeDocTools - Passport Photo Maker</h1>
 </header>
-
 
 <div class="container">
 
-<h1>Passport Photo Maker</h1>
+<div class="card">
 
-<p class="subtitle">
-Create and customize your passport-size photo online.
-</p>
+    <div class="control">
+        <label>Select Photo</label>
+        <input type="file" id="fileInput" accept="image/*">
+    </div>
 
+    <div class="control">
+        <label>Passport Photo Size</label>
 
-<div class="box">
+        <select id="sizeSelect">
+            <option value="35x45">35 × 45 mm</option>
+            <option value="35x35">35 × 35 mm</option>
+            <option value="2x2">2 × 2 inch</option>
+        </select>
+    </div>
 
+    <div class="instruction">
+        <b>How to adjust your photo:</b><br>
+        1. Select <b>Move Frame</b> and drag the frame to the exact area you want.<br>
+        2. Drag the white corner to resize the frame.<br>
+        3. Select <b>Move Photo</b> and move the photo inside the frame.<br>
+        4. Use the zoom slider or enter an exact zoom percentage.
+    </div>
 
-<div class="upload">
+    <div class="mode-buttons">
+        <button id="photoModeBtn" onclick="setMode('photo')">
+            Move Photo
+        </button>
 
-<h3>1. Select Your Photo</h3>
+        <button id="frameModeBtn" class="active" onclick="setMode('frame')">
+            Move Frame
+        </button>
 
-<input
-type="file"
-id="imageInput"
-accept="image/jpeg,image/png,image/webp"
->
+        <button onclick="resetEditor()">
+            Reset
+        </button>
+    </div>
 
+    <div class="workspace-wrapper">
 
-<label for="photoSize">
-Select Photo Size
-</label>
+        <div id="workspace">
 
-<select id="photoSize">
+            <img id="photo">
 
-<option value="35x45">
-35 × 45 mm
-</option>
+            <div id="cropBox">
+                <div class="handle"></div>
+            </div>
 
-<option value="35x35">
-35 × 35 mm
-</option>
+        </div>
 
-<option value="2x2">
-2 × 2 inch
-</option>
+    </div>
 
-</select>
+    <div class="control">
 
-</div>
+        <label>Zoom</label>
 
+        <div class="zoom-row">
 
-<div class="editor" id="editor">
+            <input
+                type="range"
+                id="zoomRange"
+                min="50"
+                max="300"
+                value="100"
+            >
 
-<h3 class="editor-title">
-2. Position Your Photo
-</h3>
+            <input
+                type="number"
+                id="zoomNumber"
+                class="zoom-number"
+                min="50"
+                max="300"
+                value="100"
+            >
 
-<p class="status">
-Drag the photo to position the face.
-</p>
+            <span>%</span>
 
+        </div>
 
-<div class="crop-area" id="cropArea">
+        <div class="small-text">
+            Enter any value from 50% to 300%.
+        </div>
 
-<img
-id="photo"
-draggable="false"
->
+    </div>
 
-<div class="crop-frame"></div>
+    <div class="control">
 
-</div>
+        <label>Background Colour</label>
 
+        <div class="background-options">
 
-<div class="controls">
+            <button class="bg-btn bg-white"
+                onclick="selectBackground('#ffffff')"></button>
 
+            <button class="bg-btn bg-lightblue"
+                onclick="selectBackground('#dff1ff')"></button>
 
-<div class="control-row">
+            <button class="bg-btn bg-blue"
+                onclick="selectBackground('#87ceeb')"></button>
 
-<label for="zoom">
-Zoom
-</label>
+            <button class="bg-btn bg-grey"
+                onclick="selectBackground('#eeeeee')"></button>
 
-<input
-type="range"
-id="zoom"
-min="0.5"
-max="3"
-step="0.01"
-value="1"
->
+            <button class="bg-btn bg-lightgreen"
+                onclick="selectBackground('#e4f5e4')"></button>
 
-<div class="zoom-value" id="zoomValue">
-100%
-</div>
+        </div>
 
-</div>
+    </div>
 
-
-<label>
-Background Colour
-</label>
-
-<div class="background-options">
-
-<button
-class="bg-button bg-white selected"
-data-color="#ffffff"
-title="White">
-</button>
-
-
-<button
-class="bg-button bg-lightblue"
-data-color="#dff1ff"
-title="Light Blue">
-</button>
-
-
-<button
-class="bg-button bg-blue"
-data-color="#8ec5e8"
-title="Blue">
-</button>
-
-
-<button
-class="bg-button bg-lightgrey"
-data-color="#eeeeee"
-title="Light Grey">
-</button>
-
-
-<button
-class="bg-button bg-custom"
-title="Custom Colour">
-
-<input
-type="color"
-id="customColor"
-value="#ffffff"
->
-
-</button>
+    <button onclick="createPhoto()">
+        Create Passport Photo
+    </button>
 
 </div>
 
 
-<button
-class="create-button"
-onclick="createPassportPhoto()">
-Create Passport Photo
-</button>
+<div class="card hidden" id="result">
+
+    <h2>Your Passport Photo</h2>
+
+    <canvas id="resultCanvas"></canvas>
+
+    <br>
+
+    <a id="downloadLink"
+       class="download-btn"
+       download="passport-photo.jpg">
+       Download Passport Photo
+    </a>
 
 </div>
 
 </div>
-
-
-<div id="result">
-
-<h3>
-3. Your Passport Photo
-</h3>
-
-<canvas
-id="resultCanvas">
-</canvas>
-
-<br>
-
-<a
-id="download"
-download="FreeDocTools-Passport-Photo.jpg">
-Download Passport Photo
-</a>
-
-</div>
-
-
-</div>
-
-
-<p class="info">
-
-Your photo is processed directly in your browser.
-It is not uploaded to our server.
-
-</p>
-
-</div>
-
-
-<footer>
-
-© 2026 FreeDocTools
-
-</footer>
 
 
 <script>
+
+const fileInput = document.getElementById("fileInput");
+const photo = document.getElementById("photo");
+const workspace = document.getElementById("workspace");
+const cropBox = document.getElementById("cropBox");
+const sizeSelect = document.getElementById("sizeSelect");
+
+const zoomRange = document.getElementById("zoomRange");
+const zoomNumber = document.getElementById("zoomNumber");
+
+const photoModeBtn = document.getElementById("photoModeBtn");
+const frameModeBtn = document.getElementById("frameModeBtn");
 
 let image = new Image();
 
 let imageLoaded = false;
 
-let zoomLevel = 1;
+let baseScale = 1;
+let currentScale = 1;
 
-let posX = 0;
+let imgX = 0;
+let imgY = 0;
 
-let posY = 0;
+let imgW = 0;
+let imgH = 0;
+
+let cropX = 0;
+let cropY = 0;
+let cropW = 180;
+let cropH = 230;
+
+let mode = "frame";
 
 let dragging = false;
+let resizing = false;
 
 let startX = 0;
-
 let startY = 0;
 
-let backgroundColor = "#ffffff";
+let startCropX = 0;
+let startCropY = 0;
+
+let startCropW = 0;
+let startCropH = 0;
+
+let selectedBackground = "#ffffff";
 
 
-const imageInput =
-document.getElementById("imageInput");
+/* ================================
+   PHOTO UPLOAD
+================================ */
 
-const photo =
-document.getElementById("photo");
+fileInput.addEventListener("change", function() {
 
-const cropArea =
-document.getElementById("cropArea");
+    const file = this.files[0];
 
-const zoom =
-document.getElementById("zoom");
+    if (!file) return;
 
+    const reader = new FileReader();
 
-imageInput.addEventListener(
-"change",
-function() {
+    reader.onload = function(e) {
 
-    const file =
-    this.files[0];
+        image = new Image();
 
-    if (!file) {
-        return;
-    }
-
-
-    const reader =
-    new FileReader();
-
-
-    reader.onload =
-    function(e) {
-
-        image.onload =
-        function() {
+        image.onload = function() {
 
             imageLoaded = true;
 
-            zoomLevel = 1;
-
-            zoom.value = 1;
-
-            posX = 0;
-
-            posY = 0;
-
-
-            photo.src =
-            e.target.result;
-
-
-            document
-            .getElementById("editor")
-            .style.display =
-            "block";
-
-
-            setupPhoto();
+            resetEditor();
 
         };
 
+        image.src = e.target.result;
 
-        image.src =
-        e.target.result;
+        photo.src = e.target.result;
 
     };
-
 
     reader.readAsDataURL(file);
 
 });
 
 
-function setupPhoto() {
+/* ================================
+   SIZE SETTINGS
+================================ */
 
-    const areaWidth =
-    cropArea.clientWidth;
+function getRatio() {
 
-    const areaHeight =
-    cropArea.clientHeight;
+    const size = sizeSelect.value;
+
+    if (size === "35x45") {
+        return 35 / 45;
+    }
+
+    if (size === "35x35") {
+        return 1;
+    }
+
+    if (size === "2x2") {
+        return 1;
+    }
+
+}
 
 
-    const imageRatio =
-    image.width / image.height;
+function getOutputSize() {
 
-    const areaRatio =
-    areaWidth / areaHeight;
+    const size = sizeSelect.value;
+
+    if (size === "35x45") {
+        return {
+            width: 413,
+            height: 531
+        };
+    }
+
+    if (size === "35x35") {
+        return {
+            width: 413,
+            height: 413
+        };
+    }
+
+    if (size === "2x2") {
+        return {
+            width: 600,
+            height: 600
+        };
+    }
+
+}
 
 
-    let displayWidth;
+/* ================================
+   RESET EDITOR
+================================ */
 
-    let displayHeight;
+function resetEditor() {
 
+    if (!imageLoaded) return;
+
+    const workspaceW = workspace.clientWidth;
+    const workspaceH = workspace.clientHeight;
 
     /*
-    Make the image large enough
-    to completely cover the crop area.
+       Make image large enough to cover
+       the entire workspace.
     */
 
-    if (imageRatio > areaRatio) {
+    baseScale = Math.max(
+        workspaceW / image.naturalWidth,
+        workspaceH / image.naturalHeight
+    );
 
-        displayHeight =
-        areaHeight;
+    currentScale = baseScale;
 
-        displayWidth =
-        displayHeight * imageRatio;
+    imgW = image.naturalWidth * currentScale;
+    imgH = image.naturalHeight * currentScale;
+
+    imgX = (workspaceW - imgW) / 2;
+    imgY = (workspaceH - imgH) / 2;
+
+    zoomRange.value = 100;
+    zoomNumber.value = 100;
+
+    createInitialCrop();
+
+    render();
+
+}
+
+
+function createInitialCrop() {
+
+    const ratio = getRatio();
+
+    let maxW = workspace.clientWidth * 0.55;
+
+    let w = maxW;
+    let h = w / ratio;
+
+    if (h > workspace.clientHeight * 0.65) {
+
+        h = workspace.clientHeight * 0.65;
+        w = h * ratio;
+
+    }
+
+    cropW = w;
+    cropH = h;
+
+    cropX = (workspace.clientWidth - cropW) / 2;
+    cropY = (workspace.clientHeight - cropH) / 2;
+
+}
+
+
+/* ================================
+   CHANGE SIZE
+================================ */
+
+sizeSelect.addEventListener("change", function() {
+
+    if (!imageLoaded) return;
+
+    createInitialCrop();
+
+    render();
+
+});
+
+
+/* ================================
+   RENDER
+================================ */
+
+function render() {
+
+    photo.style.left = imgX + "px";
+    photo.style.top = imgY + "px";
+
+    photo.style.width = imgW + "px";
+    photo.style.height = imgH + "px";
+
+    cropBox.style.left = cropX + "px";
+    cropBox.style.top = cropY + "px";
+
+    cropBox.style.width = cropW + "px";
+    cropBox.style.height = cropH + "px";
+
+}
+
+
+/* ================================
+   MODE
+================================ */
+
+function setMode(newMode) {
+
+    mode = newMode;
+
+    if (mode === "photo") {
+
+        photoModeBtn.classList.add("active");
+        frameModeBtn.classList.remove("active");
+
+        cropBox.style.pointerEvents = "none";
 
     } else {
 
-        displayWidth =
-        areaWidth;
+        frameModeBtn.classList.add("active");
+        photoModeBtn.classList.remove("active");
 
-        displayHeight =
-        displayWidth / imageRatio;
+        cropBox.style.pointerEvents = "auto";
 
     }
-
-
-    photo.style.width =
-    displayWidth + "px";
-
-    photo.style.height =
-    displayHeight + "px";
-
-
-    posX =
-    (areaWidth - displayWidth) / 2;
-
-    posY =
-    (areaHeight - displayHeight) / 2;
-
-
-    updatePhotoPosition();
 
 }
 
 
-function updatePhotoPosition() {
+/* ================================
+   PHOTO MOVEMENT
+================================ */
 
-    if (!imageLoaded) {
-        return;
-    }
+workspace.addEventListener("pointerdown", function(e) {
 
+    if (!imageLoaded) return;
 
-    const areaWidth =
-    cropArea.clientWidth;
-
-    const areaHeight =
-    cropArea.clientHeight;
-
-
-    const baseWidth =
-    parseFloat(photo.style.width);
-
-    const baseHeight =
-    parseFloat(photo.style.height);
-
-
-    const newWidth =
-    baseWidth * zoomLevel;
-
-    const newHeight =
-    baseHeight * zoomLevel;
-
-
-    /*
-    Keep image centered while zooming.
-    */
-
-    const centerX =
-    areaWidth / 2;
-
-    const centerY =
-    areaHeight / 2;
-
-
-    const oldWidth =
-    photo.offsetWidth;
-
-    const oldHeight =
-    photo.offsetHeight;
-
-
-    if (oldWidth > 0 && oldHeight > 0) {
-
-        const currentCenterX =
-        posX + oldWidth / 2;
-
-        const currentCenterY =
-        posY + oldHeight / 2;
-
-
-        if (
-            newWidth !== oldWidth ||
-            newHeight !== oldHeight
-        ) {
-
-            const relativeX =
-            currentCenterX / areaWidth;
-
-            const relativeY =
-            currentCenterY / areaHeight;
-
-            posX =
-            centerX -
-            newWidth / 2 +
-            (relativeX - 0.5) * areaWidth;
-
-            posY =
-            centerY -
-            newHeight / 2 +
-            (relativeY - 0.5) * areaHeight;
-
-        }
-
-    }
-
-
-    photo.style.width =
-    newWidth + "px";
-
-    photo.style.height =
-    newHeight + "px";
-
-    photo.style.left =
-    posX + "px";
-
-    photo.style.top =
-    posY + "px";
-
-}
-
-
-/*
-Zoom control
-*/
-
-zoom.addEventListener(
-"input",
-function() {
-
-    zoomLevel =
-    parseFloat(this.value);
-
-
-    document
-    .getElementById("zoomValue")
-    .innerText =
-    Math.round(zoomLevel * 100) + "%";
-
-
-    updatePhotoPosition();
-
-});
-
-
-/*
-Mouse dragging
-*/
-
-cropArea.addEventListener(
-"mousedown",
-function(e) {
+    if (mode !== "photo") return;
 
     dragging = true;
 
-    startX =
-    e.clientX - posX;
+    startX = e.clientX;
+    startY = e.clientY;
 
-    startY =
-    e.clientY - posY;
-
-});
-
-
-document.addEventListener(
-"mousemove",
-function(e) {
-
-    if (!dragging) {
-        return;
-    }
-
-
-    posX =
-    e.clientX - startX;
-
-    posY =
-    e.clientY - startY;
-
-
-    photo.style.left =
-    posX + "px";
-
-    photo.style.top =
-    posY + "px";
+    workspace.setPointerCapture(e.pointerId);
 
 });
 
 
-document.addEventListener(
-"mouseup",
-function() {
+workspace.addEventListener("pointermove", function(e) {
+
+    if (!dragging) return;
+
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+
+    imgX += dx;
+    imgY += dy;
+
+    startX = e.clientX;
+    startY = e.clientY;
+
+    keepImageCoveringWorkspace();
+
+    render();
+
+});
+
+
+workspace.addEventListener("pointerup", function() {
+
+    dragging = false;
+
+});
+
+workspace.addEventListener("pointercancel", function() {
 
     dragging = false;
 
 });
 
 
-/*
-Touch dragging
-*/
+/* ================================
+   KEEP PHOTO COVERING WORKSPACE
+================================ */
 
-cropArea.addEventListener(
-"touchstart",
-function(e) {
+function keepImageCoveringWorkspace() {
 
-    const touch =
-    e.touches[0];
+    /*
+       Don't allow empty areas to appear
+       inside the workspace.
+    */
+
+    if (imgW >= workspace.clientWidth) {
+
+        if (imgX > 0)
+            imgX = 0;
+
+        if (imgX + imgW < workspace.clientWidth)
+            imgX = workspace.clientWidth - imgW;
+
+    }
+
+    if (imgH >= workspace.clientHeight) {
+
+        if (imgY > 0)
+            imgY = 0;
+
+        if (imgY + imgH < workspace.clientHeight)
+            imgY = workspace.clientHeight - imgH;
+
+    }
+
+}
+
+
+/* ================================
+   FRAME MOVEMENT
+================================ */
+
+cropBox.addEventListener("pointerdown", function(e) {
+
+    if (mode !== "frame") return;
+
+    if (e.target.classList.contains("handle")) {
+
+        resizing = true;
+
+        startX = e.clientX;
+        startY = e.clientY;
+
+        startCropW = cropW;
+        startCropH = cropH;
+
+        cropBox.setPointerCapture(e.pointerId);
+
+        e.stopPropagation();
+
+        return;
+    }
 
     dragging = true;
 
-    startX =
-    touch.clientX - posX;
+    startX = e.clientX;
+    startY = e.clientY;
 
-    startY =
-    touch.clientY - posY;
+    startCropX = cropX;
+    startCropY = cropY;
 
-},
-{ passive: false }
-);
+    cropBox.setPointerCapture(e.pointerId);
 
-
-cropArea.addEventListener(
-"touchmove",
-function(e) {
-
-    if (!dragging) {
-        return;
-    }
-
-
-    e.preventDefault();
-
-
-    const touch =
-    e.touches[0];
-
-
-    posX =
-    touch.clientX - startX;
-
-    posY =
-    touch.clientY - startY;
-
-
-    photo.style.left =
-    posX + "px";
-
-    photo.style.top =
-    posY + "px";
-
-},
-{ passive: false }
-);
-
-
-cropArea.addEventListener(
-"touchend",
-function() {
-
-    dragging = false;
+    e.stopPropagation();
 
 });
 
 
-/*
-Background buttons
-*/
+cropBox.addEventListener("pointermove", function(e) {
 
-document
-.querySelectorAll(".bg-button")
-.forEach(
-function(button) {
+    if (mode !== "frame") return;
 
-    button.addEventListener(
-    "click",
-    function() {
 
-        if (
-            this.dataset.color
-        ) {
+    /* RESIZE FRAME */
 
-            backgroundColor =
-            this.dataset.color;
+    if (resizing) {
+
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        const ratio = getRatio();
+
+        let newW = startCropW + dx;
+
+        let newH = newW / ratio;
+
+        const minSize = 70;
+
+        if (newW < minSize) {
+
+            newW = minSize;
+            newH = newW / ratio;
 
         }
 
+        if (cropX + newW > workspace.clientWidth) {
 
-        document
-        .querySelectorAll(".bg-button")
-        .forEach(
-        function(btn) {
+            newW = workspace.clientWidth - cropX;
+            newH = newW / ratio;
 
-            btn.classList.remove(
-            "selected"
-            );
+        }
 
-        });
+        if (cropY + newH > workspace.clientHeight) {
 
+            newH = workspace.clientHeight - cropY;
+            newW = newH * ratio;
 
-        this.classList.add(
-        "selected"
-        );
+        }
 
-    });
+        cropW = newW;
+        cropH = newH;
 
-});
-
-
-/*
-Custom colour
-*/
-
-document
-.getElementById("customColor")
-.addEventListener(
-"input",
-function() {
-
-    backgroundColor =
-    this.value;
-
-
-    document
-    .querySelectorAll(".bg-button")
-    .forEach(
-    function(btn) {
-
-        btn.classList.remove(
-        "selected"
-        );
-
-    });
-
-
-    this
-    .parentElement
-    .classList
-    .add("selected");
-
-});
-
-
-/*
-Create final passport photo
-*/
-
-function createPassportPhoto() {
-
-    if (!imageLoaded) {
-
-        alert(
-        "Please select a photo first."
-        );
+        render();
 
         return;
 
     }
 
 
-    const size =
-    document
-    .getElementById("photoSize")
-    .value;
+    /* MOVE FRAME */
 
+    if (dragging) {
 
-    let targetWidth;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
 
-    let targetHeight;
+        cropX = startCropX + dx;
+        cropY = startCropY + dy;
 
+        if (cropX < 0)
+            cropX = 0;
 
-    if (size === "35x45") {
+        if (cropY < 0)
+            cropY = 0;
 
-        targetWidth = 413;
+        if (cropX + cropW > workspace.clientWidth)
+            cropX = workspace.clientWidth - cropW;
 
-        targetHeight = 531;
+        if (cropY + cropH > workspace.clientHeight)
+            cropY = workspace.clientHeight - cropH;
 
-    }
-
-
-    if (size === "35x35") {
-
-        targetWidth = 413;
-
-        targetHeight = 413;
+        render();
 
     }
 
+});
 
-    if (size === "2x2") {
 
-        targetWidth = 600;
+cropBox.addEventListener("pointerup", function() {
 
-        targetHeight = 600;
+    dragging = false;
+    resizing = false;
+
+});
+
+cropBox.addEventListener("pointercancel", function() {
+
+    dragging = false;
+    resizing = false;
+
+});
+
+
+/* ================================
+   ZOOM
+================================ */
+
+zoomRange.addEventListener("input", function() {
+
+    setZoom(this.value);
+
+});
+
+
+zoomNumber.addEventListener("input", function() {
+
+    let value = parseInt(this.value);
+
+    if (isNaN(value)) return;
+
+    if (value < 50)
+        value = 50;
+
+    if (value > 300)
+        value = 300;
+
+    zoomRange.value = value;
+
+    setZoom(value);
+
+});
+
+
+function setZoom(value) {
+
+    value = parseInt(value);
+
+    if (isNaN(value)) return;
+
+    if (value < 50) value = 50;
+    if (value > 300) value = 300;
+
+    zoomRange.value = value;
+    zoomNumber.value = value;
+
+    /*
+       Keep the centre of the photo
+       fixed while zooming.
+    */
+
+    const centerX = imgX + imgW / 2;
+    const centerY = imgY + imgH / 2;
+
+    currentScale = baseScale * (value / 100);
+
+    imgW = image.naturalWidth * currentScale;
+    imgH = image.naturalHeight * currentScale;
+
+    imgX = centerX - imgW / 2;
+    imgY = centerY - imgH / 2;
+
+    keepImageCoveringWorkspace();
+
+    render();
+
+}
+
+
+/* ================================
+   BACKGROUND
+================================ */
+
+function selectBackground(color) {
+
+    selectedBackground = color;
+
+}
+
+
+/* ================================
+   CREATE PASSPORT PHOTO
+================================ */
+
+function createPhoto() {
+
+    if (!imageLoaded) {
+
+        alert("Please select a photo first.");
+
+        return;
 
     }
-
-
-    const canvas =
-    document
-    .getElementById("resultCanvas");
-
-
-    canvas.width =
-    targetWidth;
-
-    canvas.height =
-    targetHeight;
-
-
-    const ctx =
-    canvas.getContext("2d");
 
 
     /*
-    Background colour
+       Convert crop-box coordinates
+       from screen/workspace pixels
+       to original image pixels.
     */
 
-    ctx.fillStyle =
-    backgroundColor;
+    const scaleX = image.naturalWidth / imgW;
+    const scaleY = image.naturalHeight / imgH;
+
+    let sx = (cropX - imgX) * scaleX;
+    let sy = (cropY - imgY) * scaleY;
+
+    let sw = cropW * scaleX;
+    let sh = cropH * scaleY;
 
 
+    /*
+       Keep values inside the original image.
+    */
+
+    if (sx < 0) sx = 0;
+    if (sy < 0) sy = 0;
+
+    if (sx + sw > image.naturalWidth)
+        sw = image.naturalWidth - sx;
+
+    if (sy + sh > image.naturalHeight)
+        sh = image.naturalHeight - sy;
+
+
+    const output = getOutputSize();
+
+    const canvas = document.getElementById("resultCanvas");
+
+    canvas.width = output.width;
+    canvas.height = output.height;
+
+    const ctx = canvas.getContext("2d");
+
+
+    /*
+       Background colour.
+    */
+
+    ctx.fillStyle = selectedBackground;
     ctx.fillRect(
-    0,
-    0,
-    targetWidth,
-    targetHeight
+        0,
+        0,
+        output.width,
+        output.height
     );
 
 
     /*
-    Calculate actual image
-    position inside crop area.
-    */
-
-    const scaleX =
-    targetWidth /
-    cropArea.clientWidth;
-
-
-    const scaleY =
-    targetHeight /
-    cropArea.clientHeight;
-
-
-    const displayedWidth =
-    parseFloat(photo.style.width);
-
-
-    const displayedHeight =
-    parseFloat(photo.style.height);
-
-
-    const drawWidth =
-    displayedWidth *
-    scaleX;
-
-
-    const drawHeight =
-    displayedHeight *
-    scaleY;
-
-
-    const drawX =
-    posX * scaleX;
-
-
-    const drawY =
-    posY * scaleY;
-
-
-    /*
-    Draw image.
+       Draw selected crop.
     */
 
     ctx.drawImage(
-    image,
-    0,
-    0,
-    image.width,
-    image.height,
-    drawX,
-    drawY,
-    drawWidth,
-    drawHeight
+        image,
+        sx,
+        sy,
+        sw,
+        sh,
+        0,
+        0,
+        output.width,
+        output.height
     );
 
 
-    const output =
-    canvas.toDataURL(
-    "image/jpeg",
-    0.95
-    );
+    /*
+       Show result.
+    */
+
+    document.getElementById("result").classList.remove("hidden");
+
+    const downloadLink =
+        document.getElementById("downloadLink");
+
+    downloadLink.href =
+        canvas.toDataURL("image/jpeg", 0.95);
 
 
-    document
-    .getElementById("result")
-    .style.display =
-    "block";
-
-
-    document
-    .getElementById("download")
-    .href =
-    output;
-
-
-    document
-    .getElementById("result")
-    .scrollIntoView({
+    window.scrollTo({
+        top: document.getElementById("result").offsetTop,
         behavior: "smooth"
     });
 
 }
 
+
+/* ================================
+   INITIAL MODE
+================================ */
+
+setMode("frame");
+
 </script>
 
-
 </body>
-
 </html>
-```
