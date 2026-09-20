@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -161,7 +162,7 @@ Convert JPG and PNG images into a PDF file for free.
 <input
 type="file"
 id="imageInput"
-accept="image/jpeg,image/png"
+accept="image/jpeg,image/png,image/webp"
 multiple
 >
 
@@ -230,8 +231,8 @@ async function createPDF() {
     const { jsPDF } =
     window.jspdf;
 
-    const pdf =
-    new jsPDF();
+    let pdf = null;
+
 
     for (let i = 0; i < files.length; i++) {
 
@@ -244,73 +245,96 @@ async function createPDF() {
         const img =
         await loadImage(dataURL);
 
-        if (i > 0) {
 
-            pdf.addPage();
+        /*
+        Convert pixels to PDF points.
+        1 pixel ≈ 0.75 PDF points.
+        */
+
+        const width =
+        img.width * 0.75;
+
+        const height =
+        img.height * 0.75;
+
+
+        /*
+        Create PDF page exactly
+        according to image size.
+        */
+
+        if (i === 0) {
+
+            pdf = new jsPDF({
+
+                orientation:
+                width > height
+                ? "landscape"
+                : "portrait",
+
+                unit: "pt",
+
+                format: [
+                    width,
+                    height
+                ]
+
+            });
+
+        } else {
+
+            pdf.addPage(
+                [width, height],
+                width > height
+                ? "landscape"
+                : "portrait"
+            );
 
         }
 
-        const pageWidth =
-        pdf.internal.pageSize.getWidth();
 
-        const pageHeight =
-        pdf.internal.pageSize.getHeight();
+        /*
+        Add the image from
+        edge to edge.
+        */
 
-        const margin = 20;
+        const format =
+        file.type === "image/png"
+        ? "PNG"
+        : "JPEG";
 
-        const maxWidth =
-        pageWidth - margin * 2;
-
-        const maxHeight =
-        pageHeight - margin * 2;
-
-        let width =
-        img.width;
-
-        let height =
-        img.height;
-
-        const scale =
-        Math.min(
-            maxWidth / width,
-            maxHeight / height
-        );
-
-        width *= scale;
-
-        height *= scale;
-
-        const x =
-        (pageWidth - width) / 2;
-
-        const y =
-        (pageHeight - height) / 2;
 
         pdf.addImage(
             dataURL,
-            "JPEG",
-            x,
-            y,
+            format,
+            0,
+            0,
             width,
             height
         );
 
     }
 
+
     const pdfBlob =
     pdf.output("blob");
+
 
     const url =
     URL.createObjectURL(pdfBlob);
 
+
     const download =
     document.getElementById("download");
+
 
     download.href =
     url;
 
+
     download.style.display =
     "inline-block";
+
 
     status.innerText =
     "PDF created successfully!";
@@ -367,3 +391,4 @@ function loadImage(src) {
 </body>
 
 </html>
+```
