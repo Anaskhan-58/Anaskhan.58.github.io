@@ -12,7 +12,7 @@ content="width=device-width, initial-scale=1.0">
 <title>Passport Photo Maker - FreeDocTools</title>
 
 <meta name="description"
-content="Create passport size photos online for free.">
+content="Create and customize passport size photos online for free.">
 
 <style>
 
@@ -34,7 +34,7 @@ header {
 }
 
 .header {
-    max-width: 900px;
+    max-width: 950px;
     margin: auto;
     display: flex;
     justify-content: space-between;
@@ -52,8 +52,8 @@ header a {
 }
 
 .container {
-    max-width: 750px;
-    margin: 50px auto;
+    max-width: 850px;
+    margin: 40px auto;
     padding: 20px;
 }
 
@@ -70,59 +70,182 @@ h1 {
 
 .box {
     background: white;
-    border: 2px dashed #bbb;
     border-radius: 15px;
-    padding: 35px 20px;
+    padding: 30px 20px;
+    border: 1px solid #ddd;
+}
+
+.upload {
     text-align: center;
+    padding-bottom: 25px;
+    border-bottom: 1px solid #eee;
 }
 
 input[type="file"] {
-    margin: 20px 0;
+    margin: 15px 0;
     width: 100%;
-}
-
-select {
-    width: 100%;
-    max-width: 350px;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 16px;
-    margin: 10px 0 20px;
 }
 
 label {
     display: block;
     font-weight: bold;
-    margin-top: 10px;
+    margin-top: 15px;
+    margin-bottom: 7px;
+}
+
+select {
+    width: 100%;
+    max-width: 350px;
+    padding: 11px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.editor {
+    display: none;
+    margin-top: 25px;
+}
+
+.editor-title {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.crop-area {
+    width: 300px;
+    height: 385px;
+    margin: 20px auto;
+    position: relative;
+    overflow: hidden;
+    background: #ddd;
+    border: 3px solid #222;
+    touch-action: none;
+}
+
+#photo {
+    position: absolute;
+    max-width: none;
+    max-height: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    cursor: move;
+}
+
+.crop-frame {
+    position: absolute;
+    inset: 0;
+    border: 2px solid white;
+    pointer-events: none;
+    box-shadow:
+        0 0 0 9999px rgba(0,0,0,0.25);
+}
+
+.controls {
+    max-width: 400px;
+    margin: 20px auto;
+}
+
+.control-row {
+    margin: 18px 0;
+}
+
+input[type="range"] {
+    width: 100%;
+}
+
+.zoom-value {
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.background-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.bg-button {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 2px solid #aaa;
+    cursor: pointer;
+}
+
+.bg-white {
+    background: white;
+}
+
+.bg-lightblue {
+    background: #dff1ff;
+}
+
+.bg-blue {
+    background: #8ec5e8;
+}
+
+.bg-lightgrey {
+    background: #eeeeee;
+}
+
+.bg-custom {
+    padding: 0;
+    overflow: hidden;
+}
+
+.bg-custom input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.selected {
+    border: 3px solid #222;
 }
 
 button {
     border: none;
     background: #222;
     color: white;
-    padding: 13px 25px;
+    padding: 13px 24px;
     border-radius: 8px;
     cursor: pointer;
     font-size: 16px;
-    margin-top: 10px;
 }
 
 button:hover {
     opacity: 0.85;
 }
 
-#preview {
+.create-button {
+    display: block;
+    margin: 25px auto 10px;
+}
+
+#result {
     display: none;
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px solid #eee;
+}
+
+#resultCanvas {
     max-width: 250px;
     max-height: 320px;
-    margin: 25px auto;
     border: 1px solid #ddd;
 }
 
 #download {
-    display: none;
-    margin-top: 15px;
+    display: inline-block;
+    margin-top: 20px;
     background: #222;
     color: white;
     text-decoration: none;
@@ -130,9 +253,10 @@ button:hover {
     border-radius: 8px;
 }
 
-#status {
-    margin-top: 20px;
-    color: #555;
+.status {
+    text-align: center;
+    color: #666;
+    margin-top: 15px;
 }
 
 .info {
@@ -147,6 +271,15 @@ footer {
     text-align: center;
     padding: 30px;
     color: #777;
+}
+
+@media (max-width: 500px) {
+
+    .crop-area {
+        width: 250px;
+        height: 321px;
+    }
+
 }
 
 </style>
@@ -179,13 +312,16 @@ FreeDocTools
 <h1>Passport Photo Maker</h1>
 
 <p class="subtitle">
-Create a passport-size photo online for free.
+Create and customize your passport-size photo online.
 </p>
 
 
 <div class="box">
 
-<h3>Select Your Photo</h3>
+
+<div class="upload">
+
+<h3>1. Select Your Photo</h3>
 
 <input
 type="file"
@@ -204,42 +340,147 @@ Select Photo Size
 35 × 45 mm
 </option>
 
-<option value="2x2">
-2 × 2 inch
-</option>
-
 <option value="35x35">
 35 × 35 mm
 </option>
 
+<option value="2x2">
+2 × 2 inch
+</option>
+
 </select>
 
+</div>
 
-<br>
+
+<div class="editor" id="editor">
+
+<h3 class="editor-title">
+2. Position Your Photo
+</h3>
+
+<p class="status">
+Drag the photo to position the face.
+</p>
 
 
-<button onclick="createPhoto()">
-Create Passport Photo
+<div class="crop-area" id="cropArea">
+
+<img
+id="photo"
+draggable="false"
+>
+
+<div class="crop-frame"></div>
+
+</div>
+
+
+<div class="controls">
+
+
+<div class="control-row">
+
+<label for="zoom">
+Zoom
+</label>
+
+<input
+type="range"
+id="zoom"
+min="0.5"
+max="3"
+step="0.01"
+value="1"
+>
+
+<div class="zoom-value" id="zoomValue">
+100%
+</div>
+
+</div>
+
+
+<label>
+Background Colour
+</label>
+
+<div class="background-options">
+
+<button
+class="bg-button bg-white selected"
+data-color="#ffffff"
+title="White">
 </button>
 
 
-<p id="status"></p>
+<button
+class="bg-button bg-lightblue"
+data-color="#dff1ff"
+title="Light Blue">
+</button>
 
 
-<img
-id="preview"
-alt="Passport Photo Preview"
+<button
+class="bg-button bg-blue"
+data-color="#8ec5e8"
+title="Blue">
+</button>
+
+
+<button
+class="bg-button bg-lightgrey"
+data-color="#eeeeee"
+title="Light Grey">
+</button>
+
+
+<button
+class="bg-button bg-custom"
+title="Custom Colour">
+
+<input
+type="color"
+id="customColor"
+value="#ffffff"
 >
 
+</button>
+
+</div>
+
+
+<button
+class="create-button"
+onclick="createPassportPhoto()">
+Create Passport Photo
+</button>
+
+</div>
+
+</div>
+
+
+<div id="result">
+
+<h3>
+3. Your Passport Photo
+</h3>
+
+<canvas
+id="resultCanvas">
+</canvas>
 
 <br>
-
 
 <a
 id="download"
 download="FreeDocTools-Passport-Photo.jpg">
-Download Photo
+Download Passport Photo
 </a>
+
+</div>
+
 
 </div>
 
@@ -263,59 +504,47 @@ It is not uploaded to our server.
 
 <script>
 
-function createPhoto() {
+let image = new Image();
 
-    const input =
-    document.getElementById("imageInput");
+let imageLoaded = false;
+
+let zoomLevel = 1;
+
+let posX = 0;
+
+let posY = 0;
+
+let dragging = false;
+
+let startX = 0;
+
+let startY = 0;
+
+let backgroundColor = "#ffffff";
+
+
+const imageInput =
+document.getElementById("imageInput");
+
+const photo =
+document.getElementById("photo");
+
+const cropArea =
+document.getElementById("cropArea");
+
+const zoom =
+document.getElementById("zoom");
+
+
+imageInput.addEventListener(
+"change",
+function() {
 
     const file =
-    input.files[0];
-
+    this.files[0];
 
     if (!file) {
-
-        alert("Please select a photo.");
-
         return;
-
-    }
-
-
-    const size =
-    document.getElementById("photoSize").value;
-
-
-    let targetWidth;
-    let targetHeight;
-
-
-    /*
-    Create a high-resolution
-    output for printing.
-    */
-
-
-    if (size === "35x45") {
-
-        targetWidth = 413;
-        targetHeight = 531;
-
-    }
-
-
-    if (size === "2x2") {
-
-        targetWidth = 600;
-        targetHeight = 600;
-
-    }
-
-
-    if (size === "35x35") {
-
-        targetWidth = 413;
-        targetHeight = 413;
-
     }
 
 
@@ -326,148 +555,596 @@ function createPhoto() {
     reader.onload =
     function(e) {
 
-        const img =
-        new Image();
-
-
-        img.onload =
+        image.onload =
         function() {
 
-            /*
-            Calculate crop area
-            using the selected ratio.
-            */
+            imageLoaded = true;
 
-            const targetRatio =
-            targetWidth / targetHeight;
+            zoomLevel = 1;
 
+            zoom.value = 1;
 
-            const imageRatio =
-            img.width / img.height;
+            posX = 0;
+
+            posY = 0;
 
 
-            let cropWidth =
-            img.width;
-
-            let cropHeight =
-            img.height;
-
-            let cropX = 0;
-
-            let cropY = 0;
-
-
-            if (imageRatio > targetRatio) {
-
-                cropWidth =
-                img.height * targetRatio;
-
-                cropX =
-                (img.width - cropWidth) / 2;
-
-            } else {
-
-                cropHeight =
-                img.width / targetRatio;
-
-                cropY =
-                (img.height - cropHeight) / 2;
-
-            }
-
-
-            const canvas =
-            document.createElement("canvas");
-
-
-            canvas.width =
-            targetWidth;
-
-            canvas.height =
-            targetHeight;
-
-
-            const ctx =
-            canvas.getContext("2d");
-
-
-            /*
-            White background
-            */
-
-            ctx.fillStyle = "white";
-
-            ctx.fillRect(
-                0,
-                0,
-                targetWidth,
-                targetHeight
-            );
-
-
-            /*
-            Draw cropped photo
-            */
-
-            ctx.drawImage(
-                img,
-                cropX,
-                cropY,
-                cropWidth,
-                cropHeight,
-                0,
-                0,
-                targetWidth,
-                targetHeight
-            );
-
-
-            const output =
-            canvas.toDataURL(
-                "image/jpeg",
-                0.95
-            );
-
-
-            const preview =
-            document.getElementById("preview");
-
-
-            preview.src =
-            output;
-
-
-            preview.style.display =
-            "block";
-
-
-            const download =
-            document.getElementById("download");
-
-
-            download.href =
-            output;
-
-
-            download.style.display =
-            "inline-block";
+            photo.src =
+            e.target.result;
 
 
             document
-            .getElementById("status")
-            .innerText =
-            "Passport photo created successfully!";
+            .getElementById("editor")
+            .style.display =
+            "block";
+
+
+            setupPhoto();
 
         };
 
 
-        img.src =
+        image.src =
         e.target.result;
 
     };
 
 
     reader.readAsDataURL(file);
+
+});
+
+
+function setupPhoto() {
+
+    const areaWidth =
+    cropArea.clientWidth;
+
+    const areaHeight =
+    cropArea.clientHeight;
+
+
+    const imageRatio =
+    image.width / image.height;
+
+    const areaRatio =
+    areaWidth / areaHeight;
+
+
+    let displayWidth;
+
+    let displayHeight;
+
+
+    /*
+    Make the image large enough
+    to completely cover the crop area.
+    */
+
+    if (imageRatio > areaRatio) {
+
+        displayHeight =
+        areaHeight;
+
+        displayWidth =
+        displayHeight * imageRatio;
+
+    } else {
+
+        displayWidth =
+        areaWidth;
+
+        displayHeight =
+        displayWidth / imageRatio;
+
+    }
+
+
+    photo.style.width =
+    displayWidth + "px";
+
+    photo.style.height =
+    displayHeight + "px";
+
+
+    posX =
+    (areaWidth - displayWidth) / 2;
+
+    posY =
+    (areaHeight - displayHeight) / 2;
+
+
+    updatePhotoPosition();
+
+}
+
+
+function updatePhotoPosition() {
+
+    if (!imageLoaded) {
+        return;
+    }
+
+
+    const areaWidth =
+    cropArea.clientWidth;
+
+    const areaHeight =
+    cropArea.clientHeight;
+
+
+    const baseWidth =
+    parseFloat(photo.style.width);
+
+    const baseHeight =
+    parseFloat(photo.style.height);
+
+
+    const newWidth =
+    baseWidth * zoomLevel;
+
+    const newHeight =
+    baseHeight * zoomLevel;
+
+
+    /*
+    Keep image centered while zooming.
+    */
+
+    const centerX =
+    areaWidth / 2;
+
+    const centerY =
+    areaHeight / 2;
+
+
+    const oldWidth =
+    photo.offsetWidth;
+
+    const oldHeight =
+    photo.offsetHeight;
+
+
+    if (oldWidth > 0 && oldHeight > 0) {
+
+        const currentCenterX =
+        posX + oldWidth / 2;
+
+        const currentCenterY =
+        posY + oldHeight / 2;
+
+
+        if (
+            newWidth !== oldWidth ||
+            newHeight !== oldHeight
+        ) {
+
+            const relativeX =
+            currentCenterX / areaWidth;
+
+            const relativeY =
+            currentCenterY / areaHeight;
+
+            posX =
+            centerX -
+            newWidth / 2 +
+            (relativeX - 0.5) * areaWidth;
+
+            posY =
+            centerY -
+            newHeight / 2 +
+            (relativeY - 0.5) * areaHeight;
+
+        }
+
+    }
+
+
+    photo.style.width =
+    newWidth + "px";
+
+    photo.style.height =
+    newHeight + "px";
+
+    photo.style.left =
+    posX + "px";
+
+    photo.style.top =
+    posY + "px";
+
+}
+
+
+/*
+Zoom control
+*/
+
+zoom.addEventListener(
+"input",
+function() {
+
+    zoomLevel =
+    parseFloat(this.value);
+
+
+    document
+    .getElementById("zoomValue")
+    .innerText =
+    Math.round(zoomLevel * 100) + "%";
+
+
+    updatePhotoPosition();
+
+});
+
+
+/*
+Mouse dragging
+*/
+
+cropArea.addEventListener(
+"mousedown",
+function(e) {
+
+    dragging = true;
+
+    startX =
+    e.clientX - posX;
+
+    startY =
+    e.clientY - posY;
+
+});
+
+
+document.addEventListener(
+"mousemove",
+function(e) {
+
+    if (!dragging) {
+        return;
+    }
+
+
+    posX =
+    e.clientX - startX;
+
+    posY =
+    e.clientY - startY;
+
+
+    photo.style.left =
+    posX + "px";
+
+    photo.style.top =
+    posY + "px";
+
+});
+
+
+document.addEventListener(
+"mouseup",
+function() {
+
+    dragging = false;
+
+});
+
+
+/*
+Touch dragging
+*/
+
+cropArea.addEventListener(
+"touchstart",
+function(e) {
+
+    const touch =
+    e.touches[0];
+
+    dragging = true;
+
+    startX =
+    touch.clientX - posX;
+
+    startY =
+    touch.clientY - posY;
+
+},
+{ passive: false }
+);
+
+
+cropArea.addEventListener(
+"touchmove",
+function(e) {
+
+    if (!dragging) {
+        return;
+    }
+
+
+    e.preventDefault();
+
+
+    const touch =
+    e.touches[0];
+
+
+    posX =
+    touch.clientX - startX;
+
+    posY =
+    touch.clientY - startY;
+
+
+    photo.style.left =
+    posX + "px";
+
+    photo.style.top =
+    posY + "px";
+
+},
+{ passive: false }
+);
+
+
+cropArea.addEventListener(
+"touchend",
+function() {
+
+    dragging = false;
+
+});
+
+
+/*
+Background buttons
+*/
+
+document
+.querySelectorAll(".bg-button")
+.forEach(
+function(button) {
+
+    button.addEventListener(
+    "click",
+    function() {
+
+        if (
+            this.dataset.color
+        ) {
+
+            backgroundColor =
+            this.dataset.color;
+
+        }
+
+
+        document
+        .querySelectorAll(".bg-button")
+        .forEach(
+        function(btn) {
+
+            btn.classList.remove(
+            "selected"
+            );
+
+        });
+
+
+        this.classList.add(
+        "selected"
+        );
+
+    });
+
+});
+
+
+/*
+Custom colour
+*/
+
+document
+.getElementById("customColor")
+.addEventListener(
+"input",
+function() {
+
+    backgroundColor =
+    this.value;
+
+
+    document
+    .querySelectorAll(".bg-button")
+    .forEach(
+    function(btn) {
+
+        btn.classList.remove(
+        "selected"
+        );
+
+    });
+
+
+    this
+    .parentElement
+    .classList
+    .add("selected");
+
+});
+
+
+/*
+Create final passport photo
+*/
+
+function createPassportPhoto() {
+
+    if (!imageLoaded) {
+
+        alert(
+        "Please select a photo first."
+        );
+
+        return;
+
+    }
+
+
+    const size =
+    document
+    .getElementById("photoSize")
+    .value;
+
+
+    let targetWidth;
+
+    let targetHeight;
+
+
+    if (size === "35x45") {
+
+        targetWidth = 413;
+
+        targetHeight = 531;
+
+    }
+
+
+    if (size === "35x35") {
+
+        targetWidth = 413;
+
+        targetHeight = 413;
+
+    }
+
+
+    if (size === "2x2") {
+
+        targetWidth = 600;
+
+        targetHeight = 600;
+
+    }
+
+
+    const canvas =
+    document
+    .getElementById("resultCanvas");
+
+
+    canvas.width =
+    targetWidth;
+
+    canvas.height =
+    targetHeight;
+
+
+    const ctx =
+    canvas.getContext("2d");
+
+
+    /*
+    Background colour
+    */
+
+    ctx.fillStyle =
+    backgroundColor;
+
+
+    ctx.fillRect(
+    0,
+    0,
+    targetWidth,
+    targetHeight
+    );
+
+
+    /*
+    Calculate actual image
+    position inside crop area.
+    */
+
+    const scaleX =
+    targetWidth /
+    cropArea.clientWidth;
+
+
+    const scaleY =
+    targetHeight /
+    cropArea.clientHeight;
+
+
+    const displayedWidth =
+    parseFloat(photo.style.width);
+
+
+    const displayedHeight =
+    parseFloat(photo.style.height);
+
+
+    const drawWidth =
+    displayedWidth *
+    scaleX;
+
+
+    const drawHeight =
+    displayedHeight *
+    scaleY;
+
+
+    const drawX =
+    posX * scaleX;
+
+
+    const drawY =
+    posY * scaleY;
+
+
+    /*
+    Draw image.
+    */
+
+    ctx.drawImage(
+    image,
+    0,
+    0,
+    image.width,
+    image.height,
+    drawX,
+    drawY,
+    drawWidth,
+    drawHeight
+    );
+
+
+    const output =
+    canvas.toDataURL(
+    "image/jpeg",
+    0.95
+    );
+
+
+    document
+    .getElementById("result")
+    .style.display =
+    "block";
+
+
+    document
+    .getElementById("download")
+    .href =
+    output;
+
+
+    document
+    .getElementById("result")
+    .scrollIntoView({
+        behavior: "smooth"
+    });
 
 }
 
