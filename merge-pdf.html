@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Merge PDF - FreeDocTools</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f7fa;
+    color: #222;
+}
+
+header {
+    background: white;
+    padding: 18px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 25px;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+h2 {
+    margin-top: 0;
+}
+
+.info {
+    background: #eef5ff;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 18px;
+    line-height: 1.5;
+    font-size: 14px;
+}
+
+input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #bbb;
+    border-radius: 7px;
+    background: white;
+}
+
+#fileList {
+    margin-top: 20px;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    margin-bottom: 8px;
+    background: #f3f3f3;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.file-number {
+    font-weight: bold;
+    width: 28px;
+}
+
+.file-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.file-size {
+    font-size: 12px;
+    color: #666;
+}
+
+.remove-btn {
+    background: #d93025;
+    color: white;
+    border: none;
+    padding: 7px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.move-btn {
+    background: #555;
+    color: white;
+    border: none;
+    padding: 7px 9px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button {
+    border: none;
+    padding: 12px 18px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 15px;
+    background: #222;
+    color: white;
+    margin-top: 15px;
+}
+
+button:hover {
+    opacity: 0.85;
+}
+
+#mergeBtn {
+    background: #168a35;
+    width: 100%;
+}
+
+#status {
+    margin-top: 15px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.download {
+    display: block;
+    text-align: center;
+    background: #0066cc;
+    color: white;
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 7px;
+    margin-top: 15px;
+}
+
+.hidden {
+    display: none;
+}
+
+.empty {
+    text-align: center;
+    color: #777;
+    padding: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>FreeDocTools - Merge PDF</h1>
+</header>
+
+<div class="container">
+
+<div class="card">
+
+    <h2>Merge PDF Files</h2>
+
+    <div class="info">
+        Select multiple PDF files and combine them into one PDF.
+        You can change their order before merging.
+        <br><br>
+        <b>Your files are processed in your browser.</b>
+    </div>
+
+    <input
+        type="file"
+        id="pdfInput"
+        accept="application/pdf"
+        multiple
+    >
+
+    <div id="fileList">
+
+        <div class="empty">
+            No PDF files selected.
+        </div>
+
+    </div>
+
+    <button id="mergeBtn" onclick="mergePDFs()">
+        Merge PDF
+    </button>
+
+    <div id="status"></div>
+
+    <div id="downloadArea" class="hidden">
+
+        <a
+            id="downloadLink"
+            class="download"
+            download="merged.pdf">
+            Download Merged PDF
+        </a>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<!-- PDF-LIB -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+
+
+<script>
+
+let selectedFiles = [];
+
+
+/* =========================
+   FILE SELECTION
+========================= */
+
+document.getElementById("pdfInput").addEventListener(
+    "change",
+    function() {
+
+        const files = Array.from(this.files);
+
+        selectedFiles = selectedFiles.concat(files);
+
+        displayFiles();
+
+        this.value = "";
+
+    }
+);
+
+
+/* =========================
+   DISPLAY FILES
+========================= */
+
+function displayFiles() {
+
+    const fileList = document.getElementById("fileList");
+
+    fileList.innerHTML = "";
+
+    if (selectedFiles.length === 0) {
+
+        fileList.innerHTML =
+            '<div class="empty">No PDF files selected.</div>';
+
+        return;
+
+    }
+
+
+    selectedFiles.forEach(function(file, index) {
+
+        const item = document.createElement("div");
+
+        item.className = "file-item";
+
+
+        const number = document.createElement("div");
+
+        number.className = "file-number";
+
+        number.textContent = index + 1;
+
+
+        const name = document.createElement("div");
+
+        name.className = "file-name";
+
+        name.textContent = file.name;
+
+
+        const size = document.createElement("div");
+
+        size.className = "file-size";
+
+        size.textContent = formatSize(file.size);
+
+
+        const upButton = document.createElement("button");
+
+        upButton.className = "move-btn";
+
+        upButton.textContent = "↑";
+
+        upButton.onclick = function() {
+
+            moveFile(index, -1);
+
+        };
+
+
+        const downButton = document.createElement("button");
+
+        downButton.className = "move-btn";
+
+        downButton.textContent = "↓";
+
+        downButton.onclick = function() {
+
+            moveFile(index, 1);
+
+        };
+
+
+        const removeButton = document.createElement("button");
+
+        removeButton.className = "remove-btn";
+
+        removeButton.textContent = "X";
+
+        removeButton.onclick = function() {
+
+            removeFile(index);
+
+        };
+
+
+        item.appendChild(number);
+        item.appendChild(name);
+        item.appendChild(size);
+        item.appendChild(upButton);
+        item.appendChild(downButton);
+        item.appendChild(removeButton);
+
+        fileList.appendChild(item);
+
+    });
+
+}
+
+
+/* =========================
+   FILE SIZE
+========================= */
+
+function formatSize(bytes) {
+
+    if (bytes < 1024) {
+
+        return bytes + " B";
+
+    }
+
+    if (bytes < 1024 * 1024) {
+
+        return (bytes / 1024).toFixed(1) + " KB";
+
+    }
+
+    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+
+}
+
+
+/* =========================
+   MOVE FILE
+========================= */
+
+function moveFile(index, direction) {
+
+    const newIndex = index + direction;
+
+    if (newIndex < 0 || newIndex >= selectedFiles.length) {
+
+        return;
+
+    }
+
+    const temp = selectedFiles[index];
+
+    selectedFiles[index] = selectedFiles[newIndex];
+
+    selectedFiles[newIndex] = temp;
+
+    displayFiles();
+
+}
+
+
+/* =========================
+   REMOVE FILE
+========================= */
+
+function removeFile(index) {
+
+    selectedFiles.splice(index, 1);
+
+    displayFiles();
+
+}
+
+
+/* =========================
+   MERGE PDF
+========================= */
+
+async function mergePDFs() {
+
+    if (selectedFiles.length < 2) {
+
+        alert("Please select at least 2 PDF files.");
+
+        return;
+
+    }
+
+
+    const status = document.getElementById("status");
+
+    const downloadArea =
+        document.getElementById("downloadArea");
+
+    const downloadLink =
+        document.getElementById("downloadLink");
+
+
+    try {
+
+        status.textContent = "Merging PDFs...";
+
+        downloadArea.classList.add("hidden");
+
+
+        const mergedPdf =
+            await PDFLib.PDFDocument.create();
+
+
+        for (let i = 0; i < selectedFiles.length; i++) {
+
+            status.textContent =
+                "Processing PDF " +
+                (i + 1) +
+                " of " +
+                selectedFiles.length +
+                "...";
+
+
+            const fileBytes =
+                await selectedFiles[i].arrayBuffer();
+
+
+            const pdf =
+                await PDFLib.PDFDocument.load(fileBytes);
+
+
+            const pages =
+                await mergedPdf.copyPages(
+                    pdf,
+                    pdf.getPageIndices()
+                );
+
+
+            pages.forEach(function(page) {
+
+                mergedPdf.addPage(page);
+
+            });
+
+        }
+
+
+        status.textContent = "Creating merged PDF...";
+
+
+        const mergedBytes =
+            await mergedPdf.save();
+
+
+        const blob =
+            new Blob(
+                [mergedBytes],
+                { type: "application/pdf" }
+            );
+
+
+        const url =
+            URL.createObjectURL(blob);
+
+
+        downloadLink.href = url;
+
+
+        downloadArea.classList.remove("hidden");
+
+
+        status.textContent =
+            "PDF merged successfully!";
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        status.textContent =
+            "Something went wrong while merging the PDFs.";
+
+        alert(
+            "Unable to merge the PDF files. Please check that the files are valid PDFs."
+        );
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
