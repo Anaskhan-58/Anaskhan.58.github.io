@@ -1,0 +1,5 @@
+
+User-agent: *
+Allow: /
+
+Sitemap: https://anaskhan-58.github.io/Anaskhan.58.github.io/sitemap.xml
